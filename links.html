@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Saved Reddit Links · Quo Support Insights</title>
+    <link rel="stylesheet" href="links.css" />
+  </head>
+  <body>
+    <main class="links">
+      <header class="links__header">
+        <div>
+          <h1>Saved Reddit Links</h1>
+          <p>Links stay available while this browser session is active.</p>
+        </div>
+        <div class="links__controls">
+          <button id="copy-csv" class="button button--secondary">
+            Copy CSV
+          </button>
+          <button id="download-csv" class="button button--primary">
+            Download CSV
+          </button>
+        </div>
+      </header>
+      <section class="links__table" aria-live="polite">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Title</th>
+              <th scope="col">URL</th>
+              <th scope="col">Captured</th>
+            </tr>
+          </thead>
+          <tbody id="links-body">
+            <tr class="links__empty">
+              <td colspan="4">No links yet. Capture one from the popup.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <footer class="links__footer">
+        <span id="link-count">0 links saved</span>
+        <button id="refresh" class="button button--ghost">Refresh</button>
+      </footer>
+      <div class="links__toast" id="toast" role="status" aria-live="polite"></div>
+    </main>
+    <script type="module" src="links.js"></script>
+  </body>
+</html>
+
+

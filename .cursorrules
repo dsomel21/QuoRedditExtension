@@ -1,0 +1,41 @@
+Quo Support Insights – Chrome Extension MVP
+Purpose
+
+Create a Chrome Extension that lets Quo employees easily collect Reddit posts or comments from the Quo support subreddit. The goal is to quickly capture and review real user pain points without manual copy-pasting or spreadsheets.
+
+1. Overview
+
+When a user visits the Quo subreddit (e.g. reddit.com/r/QuoSupport), they can click the Chrome Extension icon to open a sleek, modern interface (matching Quo/OpenPhone’s design language). From there, they can:
+
+Save a Reddit post/comment link to an in-memory CSV list.
+
+Download or copy all collected links in .csv format.
+
+No backend or database will be used. Data persists only for the current browser session.
+
+2. Goals
+
+Primary Goal: Capture support insights quickly from Reddit.
+
+Secondary Goal: Provide a beautiful, minimal UX consistent with Quo’s design aesthetic.
+
+3. MVP Functionality
+Extension Popup
+
+Minimal, elegant popup UI when clicking the extension icon.
+
+Displays:
+
+“Add Current Page” button → Saves current URL to in-memory list.
+
+“View Links” button → Opens second page (tab view).
+
+View Links Page
+
+Shows all saved links in a simple table.
+
+Includes two buttons:
+
+Download CSV → Generates and downloads .csv file.
+
+Copy CSV → Copies .csv content to clipboard.

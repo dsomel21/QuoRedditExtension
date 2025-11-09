@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Quo Support Insights",
+  "description": "Collect Reddit posts or comments for Quo support insights during the current browser session.",
+  "version": "0.1.0",
+  "action": {
+    "default_title": "Quo Support Insights",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "tabs",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://www.reddit.com/*",
+    "https://old.reddit.com/*",
+    "https://reddit.com/*"
+  ],
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  }
+}
+
