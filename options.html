@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quo Support Insights · Settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="options">
+      <header>
+        <h1>OpenAI Settings</h1>
+        <p>
+          Store your OpenAI API key locally to unlock automatic summaries, precise categories,
+          and sentiment scoring. Keys never leave your browser.
+        </p>
+      </header>
+
+      <form id="api-key-form" autocomplete="off">
+        <label for="api-key">OpenAI API Key</label>
+        <input
+          id="api-key"
+          name="api-key"
+          type="password"
+          placeholder="sk-..."
+          minlength="10"
+          required
+        />
+        <p class="options__note">
+          Tip: generate a project-scoped key and keep it private. You can clear it anytime.
+        </p>
+        <div class="options__actions">
+          <button type="submit" class="button button--primary">Save</button>
+          <button type="button" id="clear-key" class="button button--ghost">Clear</button>
+        </div>
+      </form>
+
+      <p class="options__status" id="status" aria-live="polite"></p>
+    </main>
+    <script type="module" src="scripts/options.js"></script>
+  </body>
+</html>
+

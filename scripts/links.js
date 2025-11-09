@@ -1,8 +1,12 @@
+import { getSavedLinks, clearSavedLinks } from "./storage.js";
+import { linksToCsv } from "./csv.js";
+
 const bodyEl = document.getElementById("links-body");
 const countEl = document.getElementById("link-count");
 const copyBtn = document.getElementById("copy-csv");
 const downloadBtn = document.getElementById("download-csv");
 const refreshBtn = document.getElementById("refresh");
+const clearBtn = document.getElementById("clear-all");
 const toastEl = document.getElementById("toast");
 
 function showToast(message) {
@@ -11,31 +15,6 @@ function showToast(message) {
   setTimeout(() => {
     toastEl.classList.remove("links__toast--visible");
   }, 2200);
-}
-
-function normalizeLinks(rawLinks) {
-  if (!Array.isArray(rawLinks)) return [];
-  return rawLinks.map((entry) => {
-    if (entry && typeof entry === "object") {
-      return {
-        url: String(entry.url ?? ""),
-        title: String(entry.title ?? ""),
-        capturedAt: String(entry.capturedAt ?? "")
-      };
-    }
-    return { url: String(entry ?? ""), title: "", capturedAt: "" };
-  });
-}
-
-async function getLinks() {
-  try {
-    const result = await chrome.storage.session.get({ links: [] });
-    return normalizeLinks(result.links);
-  } catch (error) {
-    console.error("Failed to read session links:", error);
-    showToast("Couldn't load links. Try refreshing.");
-    return [];
-  }
 }
 
 function formatDate(isoString) {
@@ -51,7 +30,7 @@ function renderLinks(links) {
   if (!links.length) {
     const emptyRow = document.createElement("tr");
     emptyRow.className = "links__empty";
-    emptyRow.innerHTML = `<td colspan="4">No links yet. Capture one from the popup.</td>`;
+    emptyRow.innerHTML = `<td colspan="8">No links yet. Capture one from the popup.</td>`;
     bodyEl.appendChild(emptyRow);
     countEl.textContent = "0 links saved";
     return;
@@ -59,11 +38,24 @@ function renderLinks(links) {
 
   links.forEach((entry, index) => {
     const row = document.createElement("tr");
+
     const indexCell = document.createElement("td");
     indexCell.textContent = String(index + 1).padStart(2, "0");
 
     const titleCell = document.createElement("td");
     titleCell.textContent = entry.title || "Untitled post";
+
+    const summaryCell = document.createElement("td");
+    summaryCell.textContent = entry.summary || "—";
+
+    const categoryCell = document.createElement("td");
+    categoryCell.textContent = entry.category || "—";
+
+    const sentimentCell = document.createElement("td");
+    sentimentCell.textContent = formatSentiment(entry.sentimentLabel, entry.sentimentScore);
+
+    const postedCell = document.createElement("td");
+    postedCell.textContent = formatPosted(entry.postedAt);
 
     const urlCell = document.createElement("td");
     urlCell.textContent = entry.url || "Missing URL";
@@ -74,6 +66,10 @@ function renderLinks(links) {
 
     row.appendChild(indexCell);
     row.appendChild(titleCell);
+    row.appendChild(summaryCell);
+    row.appendChild(categoryCell);
+    row.appendChild(sentimentCell);
+    row.appendChild(postedCell);
     row.appendChild(urlCell);
     row.appendChild(dateCell);
     bodyEl.appendChild(row);
@@ -83,26 +79,52 @@ function renderLinks(links) {
   countEl.textContent = `${links.length} ${label}`;
 }
 
-function toCsv(links) {
-  if (!links.length) {
-    return "";
+function formatSentiment(label, score) {
+  const trimmedLabel = String(label ?? "").trim();
+  const trimmedScore = String(score ?? "").trim();
+
+  if (!trimmedLabel && !trimmedScore) {
+    return "—";
   }
-  const header = ['"title"', '"url"', '"capturedAt"'].join(",");
-  const rows = links.map((entry) => {
-    const safe = (value) => `"${String(value ?? "").replace(/"/g, '""')}"`;
-    return [safe(entry.title), safe(entry.url), safe(entry.capturedAt)].join(",");
-  });
-  return [header, ...rows].join("\n");
+
+  if (trimmedLabel && trimmedScore) {
+    return `${trimmedLabel} (${trimmedScore}/100)`;
+  }
+
+  return trimmedLabel || `${trimmedScore}/100`;
+}
+
+function formatPosted(isoString) {
+  if (!isoString) return "—";
+  const date = new Date(isoString);
+  if (Number.isNaN(date.getTime())) {
+    return "—";
+  }
+
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  let relativeLabel;
+  if (diffDays <= 0) {
+    relativeLabel = "today";
+  } else if (diffDays === 1) {
+    relativeLabel = "1 day ago";
+  } else {
+    relativeLabel = `${diffDays} days ago`;
+  }
+
+  return `${date.toLocaleDateString()} (${relativeLabel})`;
 }
 
 async function copyCsv() {
-  const links = await getLinks();
+  const links = await getSavedLinks();
   if (!links.length) {
     showToast("No links to copy yet.");
     return;
   }
 
-  const csv = toCsv(links);
+  const csv = linksToCsv(links);
   try {
     await navigator.clipboard.writeText(csv);
     showToast("Copied CSV to clipboard.");
@@ -113,13 +135,13 @@ async function copyCsv() {
 }
 
 async function downloadCsv() {
-  const links = await getLinks();
+  const links = await getSavedLinks();
   if (!links.length) {
     showToast("No links to download yet.");
     return;
   }
 
-  const csv = toCsv(links);
+  const csv = linksToCsv(links);
   const blob = new Blob([csv], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
 
@@ -136,7 +158,7 @@ async function downloadCsv() {
 }
 
 async function refreshLinks() {
-  const links = await getLinks();
+  const links = await getSavedLinks();
   renderLinks(links);
   showToast("List refreshed.");
 }
@@ -144,10 +166,15 @@ async function refreshLinks() {
 copyBtn?.addEventListener("click", copyCsv);
 downloadBtn?.addEventListener("click", downloadCsv);
 refreshBtn?.addEventListener("click", refreshLinks);
+clearBtn?.addEventListener("click", async () => {
+  await clearSavedLinks();
+  renderLinks([]);
+  showToast("Cleared all saved links.");
+  countEl.textContent = "0 links saved";
+});
 
 (async () => {
-  const links = await getLinks();
+  const links = await getSavedLinks();
   renderLinks(links);
 })();
-
 

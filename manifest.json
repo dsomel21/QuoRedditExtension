@@ -7,6 +7,7 @@
     "default_title": "Quo Support Insights",
     "default_popup": "popup.html"
   },
+  "options_page": "options.html",
   "permissions": [
     "tabs",
     "storage",
@@ -15,7 +16,8 @@
   "host_permissions": [
     "https://www.reddit.com/*",
     "https://old.reddit.com/*",
-    "https://reddit.com/*"
+    "https://reddit.com/*",
+    "https://api.openai.com/*"
   ],
   "background": {
     "service_worker": "service-worker.js",

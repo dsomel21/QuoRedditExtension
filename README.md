@@ -31,6 +31,16 @@ A Chrome extension that helps you collect Reddit posts or comments for support i
 3. Click "Add Current Page" to save the link
 4. Click "View Links" to see all collected links for your session
 
+### Enable AI summaries
+
+To unlock automatic summaries, categories, and sentiment scores, provide your OpenAI API key from any extension page console:
+
+```js
+await chrome.storage.local.set({ openAiKey: 'sk-your-key' });
+```
+
+You can also paste the key into the extension’s Options page.
+
 ## Requirements
 
 - Chrome browser (or Chromium-based browser)

@@ -80,10 +80,33 @@ body {
   transform: translateY(-1px);
 }
 
+.button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
+}
+
 .popup__status {
   min-height: 18px;
   font-size: 12px;
   color: #6b6b6b;
+}
+
+.popup__status[data-tone="success"] {
+  color: #1f7a1f;
+}
+
+.popup__status[data-tone="error"] {
+  color: #b00020;
+}
+
+.popup__status[data-tone="warning"] {
+  color: #c77700;
+}
+
+.popup__status[data-tone="info"] {
+  color: #1a73e8;
 }
 
 

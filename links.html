@@ -28,24 +28,31 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">Title</th>
+              <th scope="col">Summary</th>
+              <th scope="col">Category</th>
+              <th scope="col">Mood</th>
+              <th scope="col">Posted</th>
               <th scope="col">URL</th>
               <th scope="col">Captured</th>
             </tr>
           </thead>
           <tbody id="links-body">
             <tr class="links__empty">
-              <td colspan="4">No links yet. Capture one from the popup.</td>
+              <td colspan="8">No links yet. Capture one from the popup.</td>
             </tr>
           </tbody>
         </table>
       </section>
       <footer class="links__footer">
         <span id="link-count">0 links saved</span>
-        <button id="refresh" class="button button--ghost">Refresh</button>
+        <div class="links__footer-actions">
+          <button id="refresh" class="button button--ghost">Refresh</button>
+          <button id="clear-all" class="button button--danger">Clear All</button>
+        </div>
       </footer>
       <div class="links__toast" id="toast" role="status" aria-live="polite"></div>
     </main>
-    <script type="module" src="links.js"></script>
+    <script type="module" src="scripts/links.js"></script>
   </body>
 </html>
 
