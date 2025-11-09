@@ -33,7 +33,7 @@ A Chrome extension that helps you collect Reddit posts or comments for support i
 
 ### Enable AI summaries
 
-To unlock automatic summaries, categories, and sentiment scores, provide your OpenAI API key from any extension page console:
+To unlock automatic summaries, categories, and sentiment scores, set your OpenAI API key by running this in any extension page console:
 
 ```js
 await chrome.storage.local.set({ openAiKey: 'sk-your-key' });
