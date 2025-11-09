@@ -39,7 +39,7 @@ To unlock automatic summaries, categories, and sentiment scores, set your OpenAI
 await chrome.storage.local.set({ openAiKey: 'sk-your-key' });
 ```
 
-You can also paste the key into the extension’s Options page.
+Replace `'sk-your-key'` with your actual OpenAI API key.
 
 ## Requirements
 
